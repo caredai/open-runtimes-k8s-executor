@@ -1,0 +1,48 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: appwrite-executor-role
+  namespace: appwrite
+  labels:
+    app: appwrite-executor
+rules:
+  # Pod operations
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "pods/exec"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Deployment operations
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Service operations
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Job operations
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # ConfigMap and Secret operations (for runtime configuration)
+  - apiGroups: [""]
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Events (for debugging)
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch", "create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: appwrite-executor-rolebinding
+  namespace: appwrite
+  labels:
+    app: appwrite-executor
+subjects:
+  - kind: ServiceAccount
+    name: appwrite-executor
+    namespace: appwrite
+roleRef:
+  kind: Role
+  name: appwrite-executor-role
+  apiGroup: rbac.authorization.k8s.io

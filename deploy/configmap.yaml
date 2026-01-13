@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appwrite-executor-config
+  namespace: appwrite
+  labels:
+    app: appwrite-executor
+data:
+  # Kubernetes namespace where runtime pods will be created
+  KUBERNETES_NAMESPACE: "appwrite-runtimes"
+  # S3 region
+  S3_REGION: "auto"
+  # Node environment
+  NODE_ENV: "production"
